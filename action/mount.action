@@ -1,0 +1,10 @@
+#goal definition
+std_msgs/Bool enable_mount
+---
+#result definition
+geometry_msgs/TransformStamped ts_mount
+std_msgs/Bool success_mount
+---
+#feedback
+std_msgs/String method_mount
+std_msgs/Bool work_mount

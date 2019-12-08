@@ -1,0 +1,10 @@
+#goal definition
+std_msgs/Bool enable_zed
+---
+#result definition
+geometry_msgs/TransformStamped ts_zed
+std_msgs/Bool success_zed
+---
+#feedback
+std_msgs/String method_zed
+std_msgs/Bool work_zed
