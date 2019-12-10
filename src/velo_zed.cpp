@@ -58,13 +58,41 @@ namespace VeloWithZedRs
     void VeloTransform::set_ts_initialized(
         geometry_msgs::TransformStamped &ts)
     {
-            ts.transform.rotation.x = 0.0;
-            ts.transform.rotation.y = 0.0;
-            ts.transform.rotation.z = 0.0;
-            ts.transform.rotation.w = 1.0;
-            ts.transform.translation.x = 0.0;
-            ts.transform.translation.y = 0.0;
-            ts.transform.translation.z = 0.0;
+        ts.transform.rotation.x = 0.0;
+        ts.transform.rotation.y = 0.0;
+        ts.transform.rotation.z = 0.0;
+        ts.transform.rotation.w = 1.0;
+        ts.transform.translation.x = 0.0;
+        ts.transform.translation.y = 0.0;
+        ts.transform.translation.z = 0.0;
+    }
+
+
+    void set_all_ts(
+        const tf2::Vector3 &t,
+        const tf2::Quaternion &q,
+        geometry_msgs::TransformStamped &ts)
+    {
+        ts.transform.rotation.x = q.x();
+        ts.transform.rotation.y = q.y();
+        ts.transform.rotation.z = q.z();
+        ts.transform.rotation.w = q.w();
+        ts.transform.translation.x = t.x();
+        ts.transform.translation.y = t.y();
+        ts.transform.translation.z = t.z();
+    }
+
+
+    void add_tlanslate_and_quaternion(
+        const tf2::Vector3 &t_mount,
+        const tf2::Vector3 &t_zed,
+        tf2::Vector3 &t,
+        const tf2::Quaternion &q_mount,
+        const tf2::Quaternion &q_zed,
+        tf2::Quaternion &q)
+    {
+        t = t_zed + t_mount;
+        q = q_zed * q_mount;
     }
 
 
@@ -100,12 +128,10 @@ namespace VeloWithZedRs
         if(!finished)
         {
             ROS_WARN("rotation broadcaster TimeOut");
-            success_set_ts = false;
             set_ts_initialized(ts);
         }
         else
         {
-            success_set_ts = true;
             result_mount = client_mount.getResult();
             ts = result_mount->ts_mount;
         }
@@ -122,12 +148,10 @@ namespace VeloWithZedRs
         if(!finished)
         {
             ROS_WARN("rotation broadcaster TimeOut");
-            success_set_ts = false;
             set_ts_initialized(ts);
         }
         else
         {
-            success_set_ts = true;
             result_zed = client_zed.getResult();
             ts = result_zed->ts_zed;
         }
@@ -161,29 +185,29 @@ namespace VeloWithZedRs
 
             get_mount_ts(ts_mount);
             get_zed_ts(ts_zed);
-            if(!success_set_ts)
-            {
-                ROS_WARN("Could not set ts");
-            }
-            else
-            {
-                R = tf2::transformToEigen(ts.transform).matrix().cast<float>();
 
-                pcl_ros::transformPointCloud(R, 
-                                             pc2, 
-                                             pc2_transformed);
+            ts_to_vec_quaternion(ts_mount, t_mount, q_mount);
+            ts_to_vec_quaternion(ts_zed, t_zed, q_zed);
 
-                pcl::fromROSMsg(pc2_transformed, *cloud);
+            add_tlanslate_and_quaternion(t_mount, t_zed, t,
+                                         q_mount, q_zed, q);
 
-                std::string format = ".pcd";
-                std::string savename = dir_path 
-                                     + file_name 
-                                     + std::to_string(count) 
-                                     + format; 
+            set_all_ts(t, q, ts);
+            R = tf2::transformToEigen(ts.transform).matrix().cast<float>();
+
+            pcl_ros::transformPointCloud(R, 
+                                         pc2, 
+                                         pc2_transformed);
+            pcl::fromROSMsg(pc2_transformed, *cloud);
+
+            std::string format = ".pcd";
+            std::string savename = dir_path 
+                                 + file_name 
+                                 + std::to_string(count) 
+                                 + format; 
         
-                pcl::io::savePCDFileASCII(savename, *cloud);
-                count++;
-            }
+            pcl::io::savePCDFileASCII(savename, *cloud);
+            count++;
         }
     }
 

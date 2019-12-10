@@ -50,16 +50,27 @@ namespace VeloWithZedRs
 
         void set_ts_initialized(
             geometry_msgs::TransformStamped &ts);
+        
+        void set_all_ts(
+            const tf2::Vector3 &t,
+            const tf2::Quaternion &q,
+            geometry_msgs::TransformStamped &ts);
+
+        void add_tlanslate_and_quaternion(
+            const tf2::Vector3 &t_mount,
+            const tf2::Vector3 &t_zed,
+            tf2::Vector3 &t,
+            const tf2::Quaternion &q_mount,
+            const tf2::Quaternion &q_zed,
+            tf2::Quaternion &q);
 
         void ts_to_vec_quaternion(
             const geometry_msgs::TransformStamped &ts,
             tf2::Vector3 &t,
             tf2::Quaternion &q);
 
-        
-
         /**
-         *  mountAction
+         *  mountAction 
          **/
         void get_mount_ts(
             geometry_msgs::TransformStamped &ts);
