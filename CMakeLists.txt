@@ -64,17 +64,17 @@ include_directories(
 
 
 #####################################
-add_executable(quaternion_mount
+add_executable(mount_transform
    src/quaternion_mount.cpp
    include/quaternion_mount.h
 )
 
-add_dependencies(quaternion_mount
+add_dependencies(mount_transform
    ${catkin_EXPORTED_TARGETS}
    ${mount_EXPORTED_TARGETS}
 )
 
-target_link_libraries(quaternion_mount
+target_link_libraries(mount_transform
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
     ${Eigen3_LIBRARIES}
@@ -83,17 +83,37 @@ target_link_libraries(quaternion_mount
 
 
 #####################################
-add_executable(odom_zed
+add_executable(zed_transform
    src/odom_zed.cpp
    include/odom_zed.h
 )
 
-add_dependencies(odom_zed
+add_dependencies(zed_transform
    ${catkin_EXPORTED_TARGETS}
-   ${mount_EXPORTED_TARGETS}
+   ${zed_EXPORTED_TARGETS}
 )
 
-target_link_libraries(odom_zed
+target_link_libraries(zed_transform
+    ${catkin_LIBRARIES}
+    ${PCL_LIBRARIES}
+    ${Eigen3_LIBRARIES}
+)
+#####################################
+
+
+#####################################
+add_executable(velo_with
+   src/velo_zed.cpp
+   include/velo_zed.h
+)
+
+add_dependencies(velo_with
+   ${catkin_EXPORTED_TARGETS}
+   ${mount_EXPORTED_TARGETS}
+   ${zed_EXPORTED_TARGETS}
+)
+
+target_link_libraries(velo_with
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
     ${Eigen3_LIBRARIES}
