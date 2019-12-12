@@ -178,17 +178,21 @@ namespace VeloWithZedRs
         if(!send_degree)
         {
             ROS_INFO("Degree : %d", degree);
+            ROS_INFO("Not changed mount's degree");
         }
         else
         {
             ROS_INFO("Degree : %d", degree);
 
-            get_mount_ts(ts_mount);
+            // zed to mount
             get_zed_ts(ts_zed);
+            // mount to velodyne
+            get_mount_ts(ts_mount);
 
             ts_to_vec_quaternion(ts_mount, t_mount, q_mount);
             ts_to_vec_quaternion(ts_zed, t_zed, q_zed);
 
+            // zed --> mount --> velodyne
             add_tlanslate_and_quaternion(t_mount, t_zed, t,
                                          q_mount, q_zed, q);
 
@@ -216,6 +220,7 @@ namespace VeloWithZedRs
     {
         ros::Rate rate(1.0);
         pub_degree.data = 1000.0;
+        send_degree = false;
 
         while(ros::ok())
         {
@@ -229,8 +234,8 @@ namespace VeloWithZedRs
             }
             else
             {
-                ros::Duration(2.0);
                 send_degree = false;
+                ros::Duration(2.0);
                 continue;
             }
             rate.sleep();
