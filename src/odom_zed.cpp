@@ -21,6 +21,9 @@ namespace VeloWithZedRs
         server.registerGoalCallback(boost::bind(&ZedQuaternion::goal_cb, this));
         server.registerPreemptCallback(boost::bind(&ZedQuaternion::preempt_cb, this));
         server.start();
+
+        ros::param::get("/all_tf_broadcaster/zed_header_id", lis_header_id);
+        ros::param::get("/all_tf_broadcaster/zed_child_id", lis_child_id);
     } 
 
 
@@ -35,8 +38,8 @@ namespace VeloWithZedRs
         geometry_msgs::TransformStamped &ts)
     {
         ts.header.stamp = ros::Time::now();
-        ts.header.frame_id = "map";
-        ts.child_frame_id = "zed";
+        ts.header.frame_id = lis_header_id;
+        ts.child_frame_id = lis_child_id;
 
 	ts.transform.translation.x = translation.x();
 	ts.transform.translation.y = translation.y();

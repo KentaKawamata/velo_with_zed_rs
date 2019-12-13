@@ -18,6 +18,9 @@ namespace VeloWithZedRs
     private:
 
         bool success;
+        std::string lis_header_id;
+        std::string lis_child_id;
+
         ros::Subscriber sub_odom;
         nav_msgs::Odometry odom;
 

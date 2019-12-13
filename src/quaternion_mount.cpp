@@ -163,7 +163,7 @@ namespace VeloWithZedRs
 
 int main(int argc, char *argv[])
 {
-    ros::init(argc, argv, "quaternion_mount");
+    ros::init(argc, argv, "odom_mount");
     ros::NodeHandle nh;
 
     VeloWithZedRs::Mount *server;

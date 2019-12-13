@@ -184,9 +184,11 @@ namespace VeloWithZedRs
         {
             ROS_INFO("Degree : %d", degree);
 
-            // zed to mount
+            // zed to mount 
+            // map frame --> all_ts frame
             get_zed_ts(ts_zed);
             // mount to velodyne
+            // all_ts frame to mount
             get_mount_ts(ts_mount);
 
             ts_to_vec_quaternion(ts_mount, t_mount, q_mount);
