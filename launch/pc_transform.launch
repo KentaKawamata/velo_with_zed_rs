@@ -1,0 +1,43 @@
+<launch>
+
+    <arg name="rs_header_id"       default="track_odom_frame" />
+    <arg name="rs_child_id"        default="track_pose_frame" />
+    <arg name="zed_header_id"       default="???" />
+    <arg name="zed_child_id"        default="???????" />
+    <arg name="pub_header_id"       default="???????" />
+    <arg name="pub_child_id"        default="velodyne" />
+
+    <arg name="x"             default="0.0" />
+    <arg name="y"             default="0.0" />
+    <arg name="z"             default="-0.05" />
+
+    <param name="/all_tf_broadcaster/rs_header_id" value="$(arg rs_header_id)" /> 
+    <param name="/all_tf_broadcaster/rs_child_id"  value="$(arg rs_child_id)" /> 
+    <param name="/all_tf_broadcaster/zed_header_id" value="$(arg zed_header_id)" /> 
+    <param name="/all_tf_broadcaster/zed_child_id"  value="$(arg zed_child_id)" /> 
+    <param name="/all_tf_broadcaster/pub_header_id" value="$(arg pub_header_id)" /> 
+    <param name="/all_tf_broadcaster/pub_child_id"  value="$(arg pub_child_id)" /> 
+
+    <param name="/all_tf_broadcaster/x"  value="$(arg x)" /> 
+    <param name="/all_tf_broadcaster/y"  value="$(arg y)" /> 
+    <param name="/all_tf_broadcaster/z"  value="$(arg z)" /> 
+
+    <node pkg="velo_with_zed_rc"
+          name="odom_mount"
+          type="mount_transform"
+          output="screen" >
+    </node>
+
+    <node pkg="velo_with_zed_rc"
+          name="odom_zed"
+          type="zed_transform"
+          output="screen" >
+    </node>
+
+    <node pkg="velo_with_zed_rc"
+          name="velo_with"
+          type="velo_with"
+          output="screen" >
+    </node>
+
+</launch>
