@@ -34,10 +34,14 @@ namespace VeloWithZedRs
     {
     }
 
-
+    // 雲台から角度を得るコールバック関数
     void Mount::degree_cb(const std_msgs::Float32 &pitch_cb)
     {
-        pitch = pitch_cb.data;
+	float degree;
+	ros::param::get("/calib_velo/degree", degree);
+        
+	   
+	pitch = pitch_cb.data;
         success = true;
     }
 
@@ -86,6 +90,7 @@ namespace VeloWithZedRs
 
         return t;
     }
+	
 
     void Mount::set_ts(
         const float roll,
@@ -101,17 +106,17 @@ namespace VeloWithZedRs
         ts.child_frame_id = "velodyne";
 
         tf2::Vector3 translation;
-	    translation.setValue(t(0), t(1), t(2));
-	    ts.transform.translation.x = translation.x();
-	    ts.transform.translation.y = translation.y();
-	    ts.transform.translation.z = translation.z();
+	translation.setValue(t(0), t(1), t(2));
+	ts.transform.translation.x = translation.x();
+	ts.transform.translation.y = translation.y();
+	ts.transform.translation.z = translation.z();
 
-	    tf2::Quaternion rotation;
-	    rotation.setRPY(0, pitch, 0);
-	    ts.transform.rotation.x = rotation.x();
-	    ts.transform.rotation.y = rotation.y();
-	    ts.transform.rotation.z = rotation.z();
-	    ts.transform.rotation.w = rotation.w();
+	tf2::Quaternion rotation;
+	rotation.setRPY(0, pitch, 0);
+	ts.transform.rotation.x = rotation.x();
+	ts.transform.rotation.y = rotation.y();
+	ts.transform.rotation.z = rotation.z();
+	ts.transform.rotation.w = rotation.w();
     }
 
 
@@ -153,8 +158,8 @@ namespace VeloWithZedRs
     {
         ros::spin();
     }
-
 }
+
 
 int main(int argc, char *argv[])
 {
