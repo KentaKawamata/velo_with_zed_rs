@@ -38,14 +38,14 @@ namespace VeloWithZedRs
         ts.header.frame_id = "map";
         ts.child_frame_id = "zed";
 
-	    ts.transform.translation.x = translation.x();
-	    ts.transform.translation.y = translation.y();
-	    ts.transform.translation.z = translation.z();
+	ts.transform.translation.x = translation.x();
+	ts.transform.translation.y = translation.y();
+	ts.transform.translation.z = translation.z();
 
-	    ts.transform.rotation.x = rotation.x();
-	    ts.transform.rotation.y = rotation.y();
-	    ts.transform.rotation.z = rotation.z();
-	    ts.transform.rotation.w = rotation.w();
+	ts.transform.rotation.x = rotation.x();
+	ts.transform.rotation.y = rotation.y();
+	ts.transform.rotation.z = rotation.z();
+	ts.transform.rotation.w = rotation.w();
     }
 
 
@@ -59,14 +59,15 @@ namespace VeloWithZedRs
     void ZedQuaternion::set_qt(
         geometry_msgs::TransformStamped &ts)
     {
+	// success : odom_cbにてzedのodom.poseが取れたか否かのbool値
         if(success)
         {
             // Camera position in map frame
             tf2::Vector3 t;
-                double x = odom.pose.pose.position.x;
-                double y = odom.pose.pose.position.y;
-                double z = odom.pose.pose.position.z;
-                t.setValue(x, y, z);
+            double x = odom.pose.pose.position.x;
+            double y = odom.pose.pose.position.y;
+            double z = odom.pose.pose.position.z;
+            t.setValue(x, y, z);
 
             // Orientation quaternion
             tf2::Quaternion q(
@@ -76,7 +77,7 @@ namespace VeloWithZedRs
                 odom.pose.pose.orientation.w);
 
             geometry_msgs::TransformStamped ts;
-
+		
             set_ts_zed(t, q, ts);
         }
         else
